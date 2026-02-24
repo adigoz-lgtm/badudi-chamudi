@@ -1,0 +1,344 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap');
+
+/* ===== משתנים ===== */
+:root {
+  --bg: #1a1a2e;
+  --bg-card: #16213e;
+  --bg-player: #0f3460;
+  --accent: #e94560;
+  --text: #eaeaea;
+  --text-muted: #888;
+  --player-height: 90px;
+}
+
+/* ===== בסיס ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  direction: rtl;
+}
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding-bottom: calc(var(--player-height) + 20px);
+}
+
+/* ===== מסך סיסמה ===== */
+#lock-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+#lock-screen.hidden {
+  display: none;
+}
+
+#lock-box {
+  text-align: center;
+  padding: 40px 32px;
+  background: var(--bg-card);
+  border-radius: 24px;
+  width: 88%;
+  max-width: 340px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+#lock-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+#lock-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+#lock-sub {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+#lock-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.1);
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  font-size: 1.1rem;
+  text-align: center;
+  outline: none;
+  margin-bottom: 14px;
+  transition: border-color 0.2s;
+}
+
+#lock-input:focus {
+  border-color: var(--accent);
+}
+
+#lock-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Heebo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+#lock-btn:active {
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+#lock-error {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  color: var(--accent);
+  min-height: 20px;
+}
+
+/* ===== Hero ===== */
+#hero {
+  position: relative;
+  text-align: center;
+  padding: 50px 20px 36px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #0f3460 0%, #1a1a2e 60%);
+}
+
+/* הילה זוהרת מאחורי התמונה */
+#hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(233,69,96,0.35) 0%, transparent 70%);
+  pointer-events: none;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.7; transform: translate(-50%, -60%) scale(1); }
+  50%       { opacity: 1;   transform: translate(-50%, -60%) scale(1.12); }
+}
+
+#hero-img {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 36px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+#hero-title {
+  margin-top: 24px;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+}
+
+#hero-sub {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+
+/* ===== רשימת שירים ===== */
+#song-list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.song-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  border: 2px solid transparent;
+}
+
+.song-card:active {
+  transform: scale(0.98);
+}
+
+.song-card.active {
+  border-color: var(--accent);
+  background: #1e2a4a;
+}
+
+.song-card img {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.song-card .song-info {
+  flex: 1;
+}
+
+.song-card .song-title {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.song-card .song-number {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.song-card .play-icon {
+  font-size: 1.4rem;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.song-card.active .play-icon {
+  opacity: 1;
+}
+
+/* ===== נגן ===== */
+#player {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: var(--player-height);
+  background: var(--bg-player);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 16px 8px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
+/* פס התקדמות */
+#progress-container {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s linear;
+}
+
+/* תוכן הנגן */
+#player-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#player-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+#player-title {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* כפתורי שליטה */
+#player-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.ctrl-btn {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s, transform 0.1s;
+  line-height: 1;
+}
+
+.ctrl-btn:active {
+  transform: scale(0.9);
+}
+
+#btn-play-pause {
+  font-size: 1.8rem;
+  color: var(--accent);
+}
+
+/* ===== מסך ריק ===== */
+#empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+#empty-state .emoji {
+  font-size: 3rem;
+}
+
+#empty-state p {
+  margin-top: 12px;
+  font-size: 0.95rem;
+}

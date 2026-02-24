@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- PWA / אייפון -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="בדודי" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+
+  <!-- manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- כותרת + תיאור -->
+  <title>בדודי חמודי 🎵</title>
+  <meta name="theme-color" content="#1a1a2e" />
+
+  <!-- סגנון -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- מסך סיסמה -->
+  <div id="lock-screen">
+    <div id="lock-box">
+      <div id="lock-icon">🔐</div>
+      <h2 id="lock-title">בדודי חמודי</h2>
+      <p id="lock-sub">הכנס סיסמה כדי להמשיך</p>
+      <input id="lock-input" type="password" placeholder="סיסמה..." autocomplete="off" />
+      <button id="lock-btn">כניסה</button>
+      <p id="lock-error"></p>
+    </div>
+  </div>
+
+  <section id="hero">
+    <div id="hero-glow"></div>
+    <img id="hero-img" src="icons/icon-512.png" alt="בדודי חמודי" />
+    <h1 id="hero-title">בדודי חמודי</h1>
+    <p id="hero-sub">🎵 הפלייליסט שלי</p>
+  </section>
+
+  <!-- מסך ריק – מוצג רק כשאין שירים -->
+  <div id="empty-state" style="display:none">
+    <div class="emoji">🎵</div>
+    <p>עדיין אין שירים.<br>הוסף MP3 לתיקיית songs/ ועדכן את songs.js</p>
+  </div>
+
+  <!-- רשימת שירים -->
+  <div id="song-list"></div>
+
+  <!-- נגן sticky בתחתית -->
+  <div id="player">
+    <div id="progress-container">
+      <div id="progress-bar"></div>
+    </div>
+    <div id="player-content">
+      <img id="player-thumb" src="" alt="תמונת שיר" />
+      <div id="player-title">בחר שיר להשמעה</div>
+      <div id="player-controls">
+        <button class="ctrl-btn" id="btn-next" title="הבא">⏭</button>
+        <button class="ctrl-btn" id="btn-play-pause" title="נגן/עצור">▶</button>
+        <button class="ctrl-btn" id="btn-prev" title="הקודם">⏮</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="songs.js"></script>
+  <script src="script.js"></script>
+
+  <!-- רישום Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(reg => console.log('SW registered:', reg.scope))
+          .catch(err => console.warn('SW failed:', err));
+      });
+    }
+  </script>
+
+</body>
+</html>
