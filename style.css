@@ -118,6 +118,94 @@ body {
   min-height: 20px;
 }
 
+/* ===== מסך כניסה ===== */
+#intro-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  isolation: isolate;
+  transition: opacity 0.5s ease;
+}
+
+#intro-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#intro-screen.hidden {
+  display: none;
+}
+
+#intro-bg {
+  position: absolute;
+  inset: -40px;
+  background-size: cover;
+  background-position: center;
+  background-image: url('icons/icon-512.png');
+  filter: blur(40px) brightness(0.25) saturate(1.4);
+  z-index: 0;
+}
+
+#intro-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 32px;
+  gap: 16px;
+}
+
+#intro-img {
+  width: 220px;
+  height: 220px;
+  border-radius: 40px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.8);
+  animation: float 4s ease-in-out infinite;
+}
+
+#intro-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+}
+
+#intro-sub {
+  font-size: 1rem;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  margin-top: -4px;
+}
+
+#intro-btn {
+  margin-top: 24px;
+  padding: 16px 52px;
+  border-radius: 50px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Heebo', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(233,69,96,0.5);
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+#intro-btn:active {
+  opacity: 0.85;
+  transform: scale(0.97);
+}
+
 /* ===== Hero ===== */
 #hero {
   position: relative;

@@ -30,6 +30,17 @@
   });
 })();
 
+// ===== מסך כניסה =====
+(function () {
+  const introScreen = document.getElementById('intro-screen');
+  const introBtn    = document.getElementById('intro-btn');
+
+  introBtn.addEventListener('click', () => {
+    introScreen.classList.add('fade-out');
+    setTimeout(() => introScreen.classList.add('hidden'), 500);
+  });
+})();
+
 // ===== מצב הנגן =====
 let currentIndex = 0;
 let isPlaying = false;
