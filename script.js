@@ -58,6 +58,20 @@ const btnPlayPause = document.getElementById('btn-play-pause');
 const btnNext = document.getElementById('btn-next');
 const heroImg = document.getElementById('hero-img');
 const heroBg = document.getElementById('hero-bg');
+const nowPlaying       = document.getElementById('now-playing');
+const npBg             = document.getElementById('np-bg');
+const npImg            = document.getElementById('np-img');
+const npTitle          = document.getElementById('np-title');
+const npNumber         = document.getElementById('np-number');
+const npProgressCont   = document.getElementById('np-progress-container');
+const npProgressBar    = document.getElementById('np-progress-bar');
+const npTimeCurrent    = document.getElementById('np-time-current');
+const npTimeTotal      = document.getElementById('np-time-total');
+const npBtnPrev        = document.getElementById('np-btn-prev');
+const npBtnPlay        = document.getElementById('np-btn-play');
+const npBtnNext        = document.getElementById('np-btn-next');
+const npClose          = document.getElementById('np-close');
+const npQueueCard      = document.getElementById('np-queue-card');
 
 // ===== אתחול =====
 function init() {
@@ -91,6 +105,7 @@ function renderSongList() {
         loadSong(index);
         playAudio();
       }
+      showNowPlaying();
     });
     songList.appendChild(card);
   });
@@ -118,22 +133,27 @@ function loadSong(index) {
   heroBg.style.backgroundImage = `url("${encodeURI(song.image)}")`;
   heroBg.classList.add('visible');
 
-  progressBar.style.width = '0%';
+  progressBar.style.width   = '0%';
+  npProgressBar.style.width = '0%';
   updateActiveCard();
+  if (nowPlaying.classList.contains('visible')) updateNowPlaying();
+}
+
+// ===== עדכון כפתורי Play/Pause בכל המקומות =====
+function setPlayingUI(playing) {
+  isPlaying = playing;
+  btnPlayPause.textContent = playing ? '⏸' : '▶';
+  npBtnPlay.textContent    = playing ? '⏸' : '▶';
 }
 
 // ===== ניגון / עצירה =====
 function playAudio() {
-  audio.play().then(() => {
-    isPlaying = true;
-    btnPlayPause.textContent = '⏸';
-  }).catch(() => {});
+  audio.play().then(() => setPlayingUI(true)).catch(() => {});
 }
 
 function pauseAudio() {
   audio.pause();
-  isPlaying = false;
-  btnPlayPause.textContent = '▶';
+  setPlayingUI(false);
 }
 
 function togglePlay() {
@@ -164,11 +184,76 @@ function updateActiveCard() {
   });
 }
 
+// ===== נגן מלא =====
+function formatTime(sec) {
+  if (!sec || isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function renderQueueCard() {
+  const nextIndex = (currentIndex + 1) % SONGS.length;
+  const next = SONGS[nextIndex];
+  npQueueCard.innerHTML = `
+    <img src="${next.image}" alt="${next.title}" onerror="this.src='icons/icon-512.png'" />
+    <div class="np-queue-info">
+      <div class="np-queue-song-title">${next.title}</div>
+      <div class="np-queue-sub">שיר ${nextIndex + 1} מתוך ${SONGS.length}</div>
+    </div>
+    <span class="np-queue-arrow">▶</span>
+  `;
+  npQueueCard.onclick = () => {
+    loadSong(nextIndex);
+    playAudio();
+  };
+}
+
+function updateNowPlaying() {
+  const song = SONGS[currentIndex];
+  npBg.style.backgroundImage  = `url("${encodeURI(song.image)}")`;
+  npImg.src                    = song.image;
+  npImg.onerror                = () => { npImg.src = 'icons/icon-512.png'; };
+  npTitle.textContent          = song.title;
+  npNumber.textContent         = `שיר ${currentIndex + 1} מתוך ${SONGS.length}`;
+  npBtnPlay.textContent        = isPlaying ? '⏸' : '▶';
+  npTimeTotal.textContent      = formatTime(audio.duration);
+  renderQueueCard();
+}
+
+function showNowPlaying() {
+  updateNowPlaying();
+  nowPlaying.classList.add('visible');
+}
+
+function hideNowPlaying() {
+  nowPlaying.classList.remove('visible');
+}
+
+npClose.addEventListener('click', hideNowPlaying);
+
+npBtnPlay.addEventListener('click', togglePlay);
+npBtnPrev.addEventListener('click', () => { prevSong(); updateNowPlaying(); });
+npBtnNext.addEventListener('click', () => { nextSong(); updateNowPlaying(); });
+
+npProgressCont.addEventListener('click', (e) => {
+  const rect  = npProgressCont.getBoundingClientRect();
+  const clickX = rect.right - e.clientX; // RTL
+  audio.currentTime = (clickX / rect.width) * audio.duration;
+});
+
+// פתיחת נגן מלא בלחיצה על אזור הנגן הקטן
+playerThumb.addEventListener('click', showNowPlaying);
+playerTitle.addEventListener('click', showNowPlaying);
+
 // ===== פס התקדמות =====
 audio.addEventListener('timeupdate', () => {
   if (audio.duration) {
     const pct = (audio.currentTime / audio.duration) * 100;
-    progressBar.style.width = pct + '%';
+    progressBar.style.width   = pct + '%';
+    npProgressBar.style.width = pct + '%';
+    npTimeCurrent.textContent = formatTime(audio.currentTime);
+    npTimeTotal.textContent   = formatTime(audio.duration);
   }
 });
 
