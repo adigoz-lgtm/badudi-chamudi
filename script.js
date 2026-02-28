@@ -137,6 +137,34 @@ function loadSong(index) {
   npProgressBar.style.width = '0%';
   updateActiveCard();
   if (nowPlaying.classList.contains('visible')) updateNowPlaying();
+  updateMediaSession();
+}
+
+// ===== Media Session API =====
+function updateMediaSession() {
+  if (!('mediaSession' in navigator)) return;
+  const song = SONGS[currentIndex];
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title:  song.title,
+    artist: 'בדודי חמודי',
+    album:  'בדודי חמודי',
+    artwork: [
+      { src: new URL(song.image, location.href).href, sizes: '512x512' }
+    ]
+  });
+
+  navigator.mediaSession.setActionHandler('play',          () => playAudio());
+  navigator.mediaSession.setActionHandler('pause',         () => pauseAudio());
+  navigator.mediaSession.setActionHandler('previoustrack', () => prevSong());
+  navigator.mediaSession.setActionHandler('nexttrack',     () => nextSong());
+  navigator.mediaSession.setActionHandler('seekto', (d)   => { audio.currentTime = d.seekTime; });
+  navigator.mediaSession.setActionHandler('seekbackward', (d) => {
+    audio.currentTime = Math.max(0, audio.currentTime - (d.seekOffset || 10));
+  });
+  navigator.mediaSession.setActionHandler('seekforward', (d) => {
+    audio.currentTime = Math.min(audio.duration, audio.currentTime + (d.seekOffset || 10));
+  });
 }
 
 // ===== עדכון כפתורי Play/Pause בכל המקומות =====
@@ -144,6 +172,9 @@ function setPlayingUI(playing) {
   isPlaying = playing;
   btnPlayPause.textContent = playing ? '⏸' : '▶';
   npBtnPlay.textContent    = playing ? '⏸' : '▶';
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = playing ? 'playing' : 'paused';
+  }
 }
 
 // ===== ניגון / עצירה =====
@@ -254,6 +285,16 @@ audio.addEventListener('timeupdate', () => {
     npProgressBar.style.width = pct + '%';
     npTimeCurrent.textContent = formatTime(audio.currentTime);
     npTimeTotal.textContent   = formatTime(audio.duration);
+
+    if ('mediaSession' in navigator) {
+      try {
+        navigator.mediaSession.setPositionState({
+          duration:     audio.duration,
+          playbackRate: audio.playbackRate,
+          position:     audio.currentTime
+        });
+      } catch (e) {}
+    }
   }
 });
 

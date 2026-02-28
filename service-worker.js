@@ -1,4 +1,4 @@
-const CACHE_NAME = 'badudi-chamudi-v8';
+const CACHE_NAME = 'badudi-chamudi-v9';
 
 const CACHE_FILES = [
   './',
