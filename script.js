@@ -45,6 +45,8 @@ const playerTitle = document.getElementById('player-title');
 const btnPrev = document.getElementById('btn-prev');
 const btnPlayPause = document.getElementById('btn-play-pause');
 const btnNext = document.getElementById('btn-next');
+const heroImg = document.getElementById('hero-img');
+const heroBg = document.getElementById('hero-bg');
 
 // ===== אתחול =====
 function init() {
@@ -94,6 +96,16 @@ function loadSong(index) {
   playerThumb.onerror = () => {
     playerThumb.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44"><rect width="44" height="44" fill="%23e94560" rx="8"/><text x="22" y="30" text-anchor="middle" font-size="20">🎵</text></svg>';
   };
+
+  // עדכון תמונת hero
+  heroImg.style.opacity = '0.3';
+  heroImg.src = song.image;
+  heroImg.onload = () => { heroImg.style.opacity = '1'; };
+  heroImg.onerror = () => { heroImg.src = 'icons/icon-512.png'; heroImg.style.opacity = '1'; };
+
+  // עדכון רקע מטושטש
+  heroBg.style.backgroundImage = `url("${encodeURI(song.image)}")`;
+  heroBg.classList.add('visible');
 
   progressBar.style.width = '0%';
   updateActiveCard();

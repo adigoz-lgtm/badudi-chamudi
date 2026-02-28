@@ -125,6 +125,22 @@ body {
   padding: 50px 20px 36px;
   overflow: hidden;
   background: linear-gradient(160deg, #0f3460 0%, #1a1a2e 60%);
+  isolation: isolate;
+}
+
+#hero-bg {
+  position: absolute;
+  inset: -40px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(35px) brightness(0.3) saturate(1.4);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  z-index: 0;
+}
+
+#hero-bg.visible {
+  opacity: 1;
 }
 
 /* הילה זוהרת מאחורי התמונה */
@@ -138,6 +154,7 @@ body {
   background: radial-gradient(circle, rgba(233,69,96,0.35) 0%, transparent 70%);
   pointer-events: none;
   animation: pulse-glow 3s ease-in-out infinite;
+  z-index: 1;
 }
 
 @keyframes pulse-glow {
@@ -147,11 +164,13 @@ body {
 
 #hero-img {
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   border-radius: 36px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  box-shadow: 0 28px 70px rgba(0,0,0,0.75);
   animation: float 4s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+  z-index: 1;
 }
 
 @keyframes float {
@@ -160,6 +179,8 @@ body {
 }
 
 #hero-title {
+  position: relative;
+  z-index: 1;
   margin-top: 24px;
   font-size: 2rem;
   font-weight: 700;
@@ -171,6 +192,8 @@ body {
 }
 
 #hero-sub {
+  position: relative;
+  z-index: 1;
   margin-top: 8px;
   font-size: 0.95rem;
   color: var(--text-muted);
