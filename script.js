@@ -79,6 +79,7 @@ function init() {
     emptyState.style.display = 'block';
     return;
   }
+  initMediaSessionHandlers();
   renderSongList();
   loadSong(0);
 }
@@ -141,29 +142,41 @@ function loadSong(index) {
 }
 
 // ===== Media Session API =====
+function initMediaSessionHandlers() {
+  if (!('mediaSession' in navigator)) return;
+
+  navigator.mediaSession.setActionHandler('play',          () => playAudio());
+  navigator.mediaSession.setActionHandler('pause',         () => pauseAudio());
+  navigator.mediaSession.setActionHandler('previoustrack', () => prevSong());
+  navigator.mediaSession.setActionHandler('nexttrack',     () => nextSong());
+  navigator.mediaSession.setActionHandler('seekto',        (d) => { audio.currentTime = d.seekTime; });
+  navigator.mediaSession.setActionHandler('seekbackward',  (d) => {
+    audio.currentTime = Math.max(0, audio.currentTime - (d.seekOffset || 10));
+  });
+  navigator.mediaSession.setActionHandler('seekforward',   (d) => {
+    audio.currentTime = Math.min(audio.duration, audio.currentTime + (d.seekOffset || 10));
+  });
+}
+
 function updateMediaSession() {
   if (!('mediaSession' in navigator)) return;
   const song = SONGS[currentIndex];
+  const ext  = song.image.split('.').pop().toLowerCase();
+  const type = (ext === 'jpg' || ext === 'jpeg') ? 'image/jpeg' : 'image/png';
+  const src  = new URL(song.image, location.href).href;
 
   navigator.mediaSession.metadata = new MediaMetadata({
     title:  song.title,
     artist: 'בדודי חמודי',
     album:  'בדודי חמודי',
     artwork: [
-      { src: new URL(song.image, location.href).href, sizes: '512x512' }
+      { src, sizes: '96x96',   type },
+      { src, sizes: '128x128', type },
+      { src, sizes: '192x192', type },
+      { src, sizes: '256x256', type },
+      { src, sizes: '384x384', type },
+      { src, sizes: '512x512', type },
     ]
-  });
-
-  navigator.mediaSession.setActionHandler('play',          () => playAudio());
-  navigator.mediaSession.setActionHandler('pause',         () => pauseAudio());
-  navigator.mediaSession.setActionHandler('previoustrack', () => prevSong());
-  navigator.mediaSession.setActionHandler('nexttrack',     () => nextSong());
-  navigator.mediaSession.setActionHandler('seekto', (d)   => { audio.currentTime = d.seekTime; });
-  navigator.mediaSession.setActionHandler('seekbackward', (d) => {
-    audio.currentTime = Math.max(0, audio.currentTime - (d.seekOffset || 10));
-  });
-  navigator.mediaSession.setActionHandler('seekforward', (d) => {
-    audio.currentTime = Math.min(audio.duration, audio.currentTime + (d.seekOffset || 10));
   });
 }
 
