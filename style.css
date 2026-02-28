@@ -285,7 +285,7 @@ body {
   height: min(68vw, 280px);
   border-radius: 28px;
   box-shadow: 0 32px 80px rgba(0,0,0,0.85);
-  object-fit: cover;
+  object-fit: contain;
   animation: float 4s ease-in-out infinite;
 }
 
