@@ -274,19 +274,21 @@ body {
   position: relative;
   z-index: 1;
   flex: 1;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 0;
+  padding: 16px 0;
 }
 
 #np-img {
   width: min(68vw, 280px);
   height: min(68vw, 280px);
+  max-width: 100%;
+  max-height: 100%;
   border-radius: 28px;
   box-shadow: 0 32px 80px rgba(0,0,0,0.85);
   object-fit: contain;
-  animation: float 4s ease-in-out infinite;
 }
 
 #np-info {
